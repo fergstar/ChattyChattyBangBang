@@ -15,6 +15,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 
 	// webapp route
+	http.Handle("/app", http.StripPrefix("/app", http.FileServer(http.Dir("./app"))))
 
 	// websocket
 
