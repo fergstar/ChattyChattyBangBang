@@ -1,16 +1,20 @@
 package main
 
 import (
-	"io"
+	"fmt"
+	"log"
 	"net/http"
+	"os"
 )
 
-func hello(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Hello world!")
-
-}
-
 func main() {
-	http.HandleFunc("/", hello)
-	http.ListenAndServe(":8000", nil)
+
+	port := os.Getenv("PORT")
+
+	// Listen
+	fmt.Println("Listening.. on PORT:", port)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		log.Fatal("ListenAndServe:", err)
+	}
+
 }
