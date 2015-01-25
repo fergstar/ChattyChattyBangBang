@@ -11,11 +11,15 @@ func main() {
 
 	port := os.Getenv("PORT")
 
+	// home route
+	http.HandleFunc("/", homeHandler)
+
 	// static route
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// webapp route
-	http.Handle("/app", http.StripPrefix("/app", http.FileServer(http.Dir("./app"))))
+	http.HandleFunc("/app/", appHandler)
 
 	// websocket
 
@@ -25,4 +29,12 @@ func main() {
 		log.Fatal("ListenAndServe:", err)
 	}
 
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "home/")
+}
+
+func appHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, r.URL.Path[1:])
 }
